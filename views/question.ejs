@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz</title>
+  <link rel="stylesheet" href="/stylesssss.css"> <!-- Optional CSS -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #question-container {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+    }
+
+    p {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .option-btn {
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin: 5px 0;
+      cursor: pointer;
+      border-radius: 5px;
+      width: 100%;
+    }
+
+    .option-btn:hover {
+      background: #0056b3;
+    }
+
+    button {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background: #218838;
+    }
+
+    .timer {
+      font-size: 20px;
+      font-weight: bold;
+      color: #dc3545;
+      margin-top: 10px;
+    }
+
+    .warning {
+      color: #ffc107;
+    }
+  </style>
+  <script>
+    let currentIndex = 0; // Current question index
+    let questions = <%- JSON.stringify(questionsArray) %>; // Embed the questions array
+    let userAnswers = new Array(questions.length).fill(null); // Track user answers (null initially)
+    let timerInterval; // To store the timer interval
+    let timeRemaining = 15; // Timer for each question
+
+    // Function to render a question
+    function renderQuestion() {
+      clearInterval(timerInterval); // Clear any existing timer
+      timeRemaining = 15; // Reset the timer
+
+      const questionContainer = document.getElementById("question-container");
+      const questionData = questions[currentIndex];
+
+      questionContainer.innerHTML = `
+        <div>
+          <h2>Question ${currentIndex + 1} / ${questions.length}</h2>
+          <p>${questionData.question}</p>
+          <ul>
+            <li><button class="option-btn" onclick="handleAnswer('A')" ${userAnswers[currentIndex] === 'A' ? 'style="background-color: lightblue;"' : ''}>${questionData.option_a}</button></li>
+            <li><button class="option-btn" onclick="handleAnswer('B')" ${userAnswers[currentIndex] === 'B' ? 'style="background-color: lightblue;"' : ''}>${questionData.option_b}</button></li>
+            <li><button class="option-btn" onclick="handleAnswer('C')" ${userAnswers[currentIndex] === 'C' ? 'style="background-color: lightblue;"' : ''}>${questionData.option_c}</button></li>
+            <li><button class="option-btn" onclick="handleAnswer('D')" ${userAnswers[currentIndex] === 'D' ? 'style="background-color: lightblue;"' : ''}>${questionData.option_d}</button></li>
+          </ul>
+        </div>
+        <div class="timer">Time Remaining: <span id="timer">15</span>s</div>
+        <div>
+          ${currentIndex > 0 ? `<button onclick="prevQuestion()">Back</button>` : ""}
+          ${currentIndex < questions.length - 1 ? `<button onclick="nextQuestion()">Next</button>` : `<button onclick="submitQuiz()">Submit</button>`}
+        </div>
+      `;
+
+      startTimer(); // Start the timer for the current question
+    }
+
+    // Function to handle the selected answer
+    function handleAnswer(selectedOption) {
+      userAnswers[currentIndex] = selectedOption; // Save the selected answer
+      renderQuestion(); // Re-render the question to highlight the selected option
+    }
+
+    // Function to move to the next question
+    function nextQuestion() {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    }
+
+    // Function to move to the previous question
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    }
+
+    // Function to submit the quiz
+    function submitQuiz() {
+      clearInterval(timerInterval); // Stop the timer
+
+      const score = userAnswers.reduce((acc, answer, index) => {
+        return acc + (answer === questions[index].correct_answer ? 1 : 0);
+      }, 0);
+
+      const questionContainer = document.getElementById("question-container");
+      questionContainer.innerHTML = `
+        <h2>Quiz Completed!</h2>
+        <p>Your Score: ${score} / ${questions.length}</p>
+        <ul>
+          ${questions.map((question, index) => `
+            <li>
+              <strong>Question:</strong> ${question.question}<br>
+              <strong>Your Answer:</strong> ${userAnswers[index] || "No Answer"} (${userAnswers[index] === question.correct_answer ? "Correct" : "Wrong"})<br>
+              <strong>Correct Answer:</strong> ${question.correct_answer}
+            </li>
+          `).join('')}
+        </ul>
+      `;
+    }
+
+    // Function to start the timer
+    function startTimer() {
+      const timerElement = document.getElementById("timer");
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        timerElement.textContent = timeRemaining;
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+
+          if (currentIndex < questions.length - 1) {
+            nextQuestion();
+          } else {
+            submitQuiz();
+          }
+        }
+      }, 1000);
+    }
+
+    // Initialize the first question on page load
+    document.addEventListener("DOMContentLoaded", renderQuestion);
+  </script>
+</head>
+<body>
+  <div id="question-container">
+    <!-- Questions will be rendered dynamically here -->
+  </div>
+</body>
+</html>

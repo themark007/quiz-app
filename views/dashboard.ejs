@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+     <link rel="stylesheet" href="styles.css">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+
+
+        <div class="nav-bar">
+            <div class="logo">
+                 <img src="./images/logo.png" alt="">
+            </div>
+            <div class="options">
+                <a href="">Home</a>
+                <a href="">Take Test</a>
+                <a href="">Contact Us</a>
+            </div>
+            <div class="icons">
+                <i class="fa-solid fa-bell"></i>
+                <i class="fa-solid fa-user" onclick="window.location.href='/Profile'"></i>
+            </div>
+            
+           
+        </div>
+
+        <div>
+            <img src="./images/profile.png" alt="">
+            <p> <%= username %></p>
+        </div>
+
+        <div class="sats">
+            <button>
+                Performance History
+            </button>
+            <button>
+                Leader Board
+            </button>
+            <div class="ranking">
+                <p class="Rank">0</p>
+                <p>Your Rank</p>
+            </div>
+        </div>
+
+        <div class="main">
+            <p>Quote or Start Prep!</p>
+            <div class="sub">
+                <div class="sub-1 card" onclick="window.location.href='/inst?subject=dsa'">
+                    <img src="./images/dsa.png" alt="">
+                    <p>Data Structure and Algorithm</p>
+                </div>
+                <div class="sub-2 card" onclick="window.location.href='/inst?subject=dbms'">
+                    <img src="./images/dbms.png" alt="">
+                    <p>DBMS</p>
+                </div>
+                <div class="sub-3 card" onclick="window.location.href='/inst?subject=apti'">
+                    <img src="./images/Aptitude.jpg" alt="">
+                    <p>Aptitude</p>
+                </div>
+                <div class="sub-4 card" onclick="window.location.href='/inst?subject=os'">
+                    <img src="./images/os.png" alt="">
+                    <p>Operating System</p>
+                </div>
+                <div class="sub-5 card" onclick="window.location.href='/inst?subject=cn'">
+                    <img src="./images/cn.png" alt="">
+                    <p>Computer Network</p>
+                </div>
+            </div>
+            
+        </div>
+        
+           
+        </div>
+
+
+    </div>
+    <script src="script.js"></script>
+</body>
+
+
+
+</html>
